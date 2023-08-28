@@ -1,0 +1,77 @@
+# Note  : *** the batch_size should be equal to the gpus number at the test phase!!! ***
+data_cfg:
+  dataset_name: Gait3D
+  dataset_root:
+  dataset_partition: ./misc/partitions/Gait3D.json
+  num_workers: 1
+  remove_no_gallery: false # Remove probe if no gallery for it
+  test_dataset_name: Gait3D
+
+evaluator_cfg:
+  enable_distributed: true
+  enable_float16: false 
+  restore_ckpt_strict: true
+  restore_hint: 150000
+  save_name: Dygait_Gait3D
+  eval_func: evaluation_Gait3D # identification_real_scene # identification_GREW_submission
+  sampler:
+    batch_size: 8
+    sample_type: all_ordered
+    type: InferenceSampler
+
+loss_cfg:
+  - loss_term_weight: 1.0
+    margin: 0.2
+    type: TripletLoss
+    log_prefix: triplet
+  - loss_term_weight: 0.1
+    scale: 16
+    type: CrossEntropyLoss
+    log_prefix: softmax
+    log_accuracy: true
+
+model_cfg:
+  model: Dygait_aaai
+  channels: [64, 128, 256, 512]
+  class_num: 3000
+  SeparateBNNecks:
+    class_num: 3000
+    in_channels: 512
+    parts_num: 32
+
+optimizer_cfg:
+  lr: 0.1
+  momentum: 0.9
+  solver: SGD
+  weight_decay: 0.0005
+
+scheduler_cfg:
+  gamma: 0.1
+  milestones: # Learning Rate Reduction at each milestones
+    - 50000
+    - 100000
+    - 150000
+  scheduler: MultiStepLR
+
+trainer_cfg:
+  enable_distributed: true
+  enable_float16: true
+  with_test: false
+  log_iter: 100
+  restore_ckpt_strict: true
+  restore_hint: 0
+  save_iter: 10000
+  save_name: Dygait_Gait3D
+  sync_BN: true
+  total_iter: 150000
+  sampler:
+    batch_shuffle: true
+    batch_size:
+      - 32
+      - 4
+    frames_num_fixed: 30
+    frames_skip_num: 0
+    sample_type: fixed_ordered
+    type: TripletSampler
+
+
