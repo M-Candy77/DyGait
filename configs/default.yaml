@@ -1,6 +1,6 @@
 data_cfg:
   dataset_name: CASIA-B
-  dataset_root: your_path
+  dataset_root: 
   num_workers: 1
   dataset_partition: ./datasets/CASIA-B/CASIA-B.json
   remove_no_gallery: false
