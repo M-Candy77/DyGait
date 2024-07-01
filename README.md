@@ -30,7 +30,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_
 
 
 ## Acknowledgement
-- [GaigGL](https://github.com/bb12346/GaitGL)
+- [GaitGL](https://github.com/bb12346/GaitGL)
 - [OpenGait](https://github.com/ShiqiYu/OpenGait)
 
 
